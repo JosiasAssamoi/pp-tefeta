@@ -1,0 +1,14 @@
+{
+  "name": "pp-tefeta",
+  "version": "1.0.0",
+  "description": "maze solver",
+  "main": "main.ts",
+  "repository": "https://github.com/JosiasAssamoi/pp-tefeta",
+  "author": "Josias Assamoi",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^14.0.14",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.5"
+  }
+}
