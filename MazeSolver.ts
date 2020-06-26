@@ -18,75 +18,68 @@ export default class MazeSolver {
         let y :number = this.yStart 
         let trouve:boolean = false
         let max :number = 0
-       while ( !trouve && max < 1000){
-
-                ({ x, y,trouve} = this.DFS(x, y, chemin,trouve))  
- 
-            max += 1 
-            } 
-            console.log(this.newMaze);
-            //console.log(this.maze);
-            
-    
+        this.DFS(x, y)
+        console.log(this.newMaze);
+        
     }
 
-    private DFS(x: number, y: number, chemin: Object[], trouve:boolean) {
+    private DFS(x: number, y: number) {
+        
+
+        if (this.isOutside(x, y)) return false
+        if (this.isGoal(x, y)) return true
+        if (this.isBlocked(x, y)) return false
+        if (!this.isOpen(x, y)) return false
+    
+        this.newMaze[x][y] = this.newMaze[x][y] == "1" ? "1" : 'v'
+
+        
+        // ←
+        if (this.DFS(x - 1, y)) return true
+    
+        // ↑
+        if (this.DFS(x, y + 1)) return true
+    
+        // →
+        if (this.DFS(x + 1, y)) return true
+    
+        // ↓
+        if (this.DFS(x, y - 1)) return true
+    
+
+        return false
 
       
-        while (this.newMaze[x - 1][y] != undefined && this.newMaze[x - 1][y] == " ") {
-            this.newMaze[x - 1][y] = "v"
-            chemin.push({ x: x - 1, y })
-            x--
-        }
+      
+      
+    }
 
-        while (this.newMaze[x][y + 1] != undefined && this.newMaze[x][y + 1] == " ") {
-            this.newMaze[x][y + 1] = "v"
-            chemin.push({ x, y: y + 1 })
-            y++
-        }
-
-        while (this.newMaze[x + 1][y] != undefined && this.newMaze[x + 1][y] == " ") {
-            this.newMaze[x + 1][y] = "v"
-            chemin.push({ x: x + 1, y })
-            x++
-        }
-
-        while (this.newMaze[x][y - 1] != undefined && this.newMaze[x][y - 1] == " ") {
-            this.newMaze[x][y - 1] = "v"
-            chemin.push({ x, y: y - 1 })
-            y--;
-        }
- 
-         ({ x, y } = this.putFalseOnCell(x, y, chemin,trouve))
-
-         if( this.newMaze[x+1][y] && this.newMaze[x+1][y]=="2" ||  this.newMaze[x-1][y] && this.maze[x-1][y]=="2" || this.maze[x][y+1] && this.maze[x][y+1]=="2" ||  this.maze[x][y-1] && this.maze[x][y-1]=="2"){
-            console.log('trouvé');
-            trouve = true
-            return {x,y,trouve}
-        }
-         
-        return { x, y,trouve }
+    private isOutside(x,y){
+        let rowCount= this.newMaze.length
+        let columnCount= this.newMaze[0].length
+        return x >= rowCount || x < 0 || y >= columnCount || y < 0
 
     }
 
-    private putFalseOnCell(x: number, y: number, chemin: Object[],trouve:boolean) {
-        if ( (this.newMaze[x - 1][y] == undefined || this.newMaze[x - 1][y] != " ") && (this.newMaze[x][y + 1] == undefined || this.newMaze[x][y + 1] != " ")  && (this.newMaze[x + 1][y] == undefined || this.newMaze[x+1][y] != " ") && (this.newMaze[x][y - 1] == undefined || this.newMaze[x][y - 1] != " ") ) {
-            if (this.newMaze[x][y] && this.newMaze[x][y] == "v") {
-                console.log(x,y); 
-                this.newMaze[x][y] = "f"
-            }
-            if(chemin.length > 1){
-                x = chemin[chemin.length - 1]['x']
-                y = chemin[chemin.length - 1]['y']
-                chemin.pop()
-                this.DFS(x, y, chemin,trouve)
-            }
-
-
-
-        }
-        return { x, y }
+    private isOpen(x,y){
+        return this.newMaze[x][y]==' ' ||  this.newMaze[x][y]=='1'
     }
+
+    private isVisited(x,y){
+        return this.newMaze[x][y]=='v'
+    }
+
+    private isBlocked(x, y): boolean {
+        return this.newMaze[x][y] === '*'
+    }
+      
+
+    private isGoal(x,y){
+        return this.newMaze[x][y]=='2'
+
+    }
+
+
 
     private bootMaze() {
         for (let i in this.maze) {
